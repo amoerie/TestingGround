@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>QueryInterceptor</id>
+    <version>0.2</version>
+    <title>QueryInterceptor</title>
+    <authors>David Fowler</authors>
+    <owners>David Fowler</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Exposes a generic extension method to IQueryable&lt;T&gt; that allows interception of expression trees with expression visitors.</description>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <references>
+      <reference file="QueryInterceptor.dll" />
+    </references>
+  </metadata>
+</package>
