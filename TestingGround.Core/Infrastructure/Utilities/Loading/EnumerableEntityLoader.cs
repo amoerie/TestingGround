@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using LinqKit;
+using QueryInterceptor;
 using TestingGround.Core.Domain.Internal.Bases;
 using TestingGround.Core.Domain.Internal.Contracts;
 using TestingGround.Core.Infrastructure.Attributes;
@@ -84,7 +85,7 @@ namespace TestingGround.Core.Infrastructure.Utilities.Loading
                         });
 /*            if (_baseLoader != null)
                 loadModels = _baseLoader.Transform(loadModels);*/
-            return loadModels;
+            return loadModels.InterceptWith<IEntityLoadModel<TEntity>>(new CollectionPropertyVisitor<TProperty>());
         }
 
 

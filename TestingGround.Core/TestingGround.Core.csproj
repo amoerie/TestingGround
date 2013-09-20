@@ -36,6 +36,9 @@
     <Reference Include="LinqKit">
       <HintPath>..\packages\LinqKit.1.0\lib\35\LinqKit.dll</HintPath>
     </Reference>
+    <Reference Include="QueryInterceptor">
+      <HintPath>..\packages\QueryInterceptor.0.2\lib\net40\QueryInterceptor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -63,8 +66,8 @@
     <Compile Include="Domain\Security\Models\UserProfile.cs" />
     <Compile Include="Domain\Security\Repositories\IUserProfileRepository.cs" />
     <Compile Include="Infrastructure\Attributes\ApiAttributes.cs" />
-    <Compile Include="Infrastructure\Interceptors\CollectionPropertyVisitor.cs" />
-    <Compile Include="Infrastructure\PropertyIntercepting\FilteredCollection.cs" />
+    <Compile Include="Infrastructure\Visitors\CollectionPropertyVisitor.cs" />
+    <Compile Include="Infrastructure\FilteredCollection.cs" />
     <Compile Include="Infrastructure\Utilities\Authentication\PasswordHasher.cs" />
     <Compile Include="Infrastructure\Utilities\Filtering\EmptyEntityFilter.cs" />
     <Compile Include="Infrastructure\Utilities\Filtering\EntityFilter.cs" />
@@ -75,7 +78,6 @@
     <Compile Include="Infrastructure\Utilities\Loading\EntityLoader.cs" />
     <Compile Include="Infrastructure\Utilities\Loading\EntityLoadModel.cs" />
     <Compile Include="Infrastructure\Utilities\Loading\EnumerableEntityLoader.cs" />
-    <Compile Include="Infrastructure\Utilities\Loading\ExtensionsForIEntityIncluder.cs" />
     <Compile Include="Infrastructure\Utilities\Loading\PropertyEntityLoader.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\EmptyEntitySorter.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\EntitySorter.cs" />
@@ -84,8 +86,8 @@
     <Compile Include="Infrastructure\Utilities\Sorting\OrderByEntitySorter.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\SortDirection.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\ThenByEntitySorter.cs" />
-    <Compile Include="Infrastructure\Interceptors\IQueryableEntitiesVisitor.cs" />
-    <Compile Include="Infrastructure\Interceptors\ParameterRebinder.cs" />
+    <Compile Include="Infrastructure\Visitors\IQueryableEntitiesVisitor.cs" />
+    <Compile Include="Infrastructure\Visitors\ParameterRebinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

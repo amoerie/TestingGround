@@ -11,7 +11,8 @@ namespace TestingGround.Tests
     [TestFixture]
     public class TestsForEagerEnumerableLoading: TestBase
     {
-        private readonly IEntityLoader<GymMember> _workoutsLoader = EntityLoader<GymMember>.Include(g => g.Workouts.Where(w => w.Deleted == false));
+        private readonly IEntityLoader<GymMember> _workoutsLoader 
+            = EntityLoader<GymMember>.Include(g => g.Workouts.Where(w => w.Id == 2));
         private readonly IEntityFilter<GymMember> _alexFilter = EntityFilter<GymMember>.Where(g => g.Name.Equals("Alex"));
         [Test]
         public void TestThatNumberOfGymMembersIs1()
@@ -21,26 +22,18 @@ namespace TestingGround.Tests
         }
 
         [Test]
-        public void TestThatNumberOfWorkoutsOnAlexIs2()
+        public void TestThatNumberOfWorkoutsOnAlexIs1()
         {
             var alex = GymMembers.Single(_alexFilter, _workoutsLoader);
-            Assert.That(alex.Workouts.Count, Is.EqualTo(2));
+            Assert.That(alex.Workouts.Count, Is.EqualTo(1));
         }
 
         [Test]
-        public void TestThatNumberOfWorkoutExercisesOnTheFirstWorkoutIs3()
+        public void TestThatNumberOfWorkoutExercisesOnTheWorkoutIs0()
         {
             var alex = GymMembers.Single(_alexFilter, _workoutsLoader);
-            var firstWorkout = alex.Workouts.OrderBy(w => w.Date).First();
-            Assert.That(firstWorkout.WorkoutExercises.Count, Is.EqualTo(3));
-        }
-
-        [Test]
-        public void TestThatNumberOfWorkoutExercisesOnTheLastWorkoutIs0()
-        {
-            var alex = GymMembers.Single(_alexFilter, _workoutsLoader);
-            var lastWorkout = alex.Workouts.OrderBy(w => w.Date).Last();
-            Assert.That(lastWorkout.WorkoutExercises.Count, Is.EqualTo(0));
+            var firstWorkout = alex.Workouts.Single();
+            Assert.That(firstWorkout.WorkoutExercises.Count, Is.EqualTo(0));
         }
     }
 }
