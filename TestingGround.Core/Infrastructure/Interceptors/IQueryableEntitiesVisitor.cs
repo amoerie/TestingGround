@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using TestingGround.Core.Domain.Internal.Bases;
 
-namespace TestingGround.Default.Interceptors
+namespace TestingGround.Core.Infrastructure.Interceptors
 {
-    public class DeletedFilterInterceptor: ExpressionVisitor
+    public class QueryableEntitiesVisitor: ExpressionVisitor
     {
         public Expression<Func<Entity, bool>> Filter { get; set; }
 
-        public DeletedFilterInterceptor()
+        public QueryableEntitiesVisitor()
         {
             Filter = entity => !entity.Deleted;
         }
@@ -22,14 +19,14 @@ namespace TestingGround.Default.Interceptors
             return !ex.Type.IsGenericType ? base.VisitMember(ex) : CreateWhereExpression(Filter, ex) ?? base.VisitMember(ex);
         }
 
-        private Expression CreateWhereExpression(Expression<Func<Entity, bool>> filter, Expression ex)
+        private Expression CreateWhereExpression(Expression<Func<Entity, bool>> filter, MemberExpression memberExpression)
         {
-            var type = ex.Type;//.GetGenericArguments().First();
+            var type = memberExpression.Type;//.GetGenericArguments().First();
             var test = CreateExpression(filter, type);
             if (test == null)
                 return null;
             var listType = typeof(IQueryable<>).MakeGenericType(type);
-            return Expression.Convert(Expression.Call(typeof(Enumerable), "Where", new Type[] { type }, (Expression)ex, test), listType);
+            return Expression.Convert(Expression.Call(typeof(Enumerable), "Where", new[] { type }, memberExpression, test), listType);
         }
 
         private LambdaExpression CreateExpression(Expression<Func<Entity, bool>> condition, Type type)

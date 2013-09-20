@@ -15,7 +15,7 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         ///     filtered by the <paramref name="filter" />, paged accordingly with the <paramref name="page" /> and
         ///     <paramref
         ///         name="pageSize" />
-        ///     and with navigational properties eagerly loaded as defined by the <paramref name="includer" />.
+        ///     and with navigational properties eagerly loaded as defined by the <paramref name="loader" />.
         /// </summary>
         /// 
         /// <param name="filter">
@@ -30,8 +30,8 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <param name="pageSize">
         ///     The number of entities this method (maximally) returns.
         /// </param>
-        /// <param name="includer">
-        ///     The <see cref="IEntityIncluder{TEntity}" /> that defines which navigational properties should be eagerly loaded.
+        /// <param name="loader">
+        ///     The <see cref="IEntityLoader{TEntity}" /> that defines which navigational properties should be eagerly loaded.
         /// </param>
         /// 
         /// <exception cref="ArgumentException">
@@ -46,14 +46,14 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         ///     filtered by the <paramref name="filter" />, paged accordingly with the <paramref name="page" /> and
         ///     <paramref
         ///         name="pageSize" />
-        ///     and with navigational properties eagerly loaded as defined by the <paramref name="includer" />
+        ///     and with navigational properties eagerly loaded as defined by the <paramref name="loader" />
         /// </returns>
-        IQueryable<TEntity> List(
+        IList<TEntity> List(
             IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ),
             IEntitySorter<TEntity> sorter = default( IEntitySorter<TEntity> ),
             int? page = null,
             int? pageSize = null,
-            IEntityIncluder<TEntity> includer = default( IEntityIncluder<TEntity> ));
+            IEntityLoader<TEntity> loader = default( IEntityLoader<TEntity> ));
 
         /// <summary>
         ///     Returns the number of entities that satisfy the filter, or the total number of entities if no filter is defined
@@ -85,8 +85,8 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <param name="filter">
         ///     The <see cref="IEntityFilter{TEntity}" /> that defines how the entities should be filtered
         /// </param>
-        /// <param name="includer">
-        ///     The <see cref="IEntityIncluder{TEntity}" /> that defines which navigational properties should be eagerly loaded.
+        /// <param name="loader">
+        ///     The <see cref="IEntityLoader{TEntity}" /> that defines which navigational properties should be eagerly loaded.
         /// </param>
         /// 
         /// <exception cref="InvalidOperationException">
@@ -96,7 +96,7 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <returns>
         ///     The <see cref="TEntity" />.
         /// </returns>
-        TEntity SingleOrDefault(IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ), IEntityIncluder<TEntity> includer = default( IEntityIncluder<TEntity> ));
+        TEntity SingleOrDefault(IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ), IEntityLoader<TEntity> loader = default( IEntityLoader<TEntity> ));
 
         /// <summary>
         ///     Returns the single entity that satisfies the predicate.
@@ -106,8 +106,8 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <param name="filter">
         ///     The <see cref="IEntityFilter{TEntity}" /> that defines how the entities should be filtered
         /// </param>
-        /// <param name="includer">
-        ///     The <see cref="IEntityIncluder{TEntity}" /> that defines which navigational properties should be eagerly loaded.
+        /// <param name="loader">
+        ///     The <see cref="IEntityLoader{TEntity}" /> that defines which navigational properties should be eagerly loaded.
         /// </param>
         /// 
         /// <exception cref="InvalidOperationException">
@@ -119,7 +119,7 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <returns>
         ///     The <see cref="TEntity" />.
         /// </returns>
-        TEntity Single(IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ), IEntityIncluder<TEntity> includer = default( IEntityIncluder<TEntity> ));
+        TEntity Single(IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ), IEntityLoader<TEntity> loader = default( IEntityLoader<TEntity> ));
 
         /// <summary>
         ///     Returns the first entity from that satisfies the filter or null otherwise
@@ -131,8 +131,8 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <param name="sorter">
         ///     The <see cref="IEntitySorter{TEntity}" /> that defines how the entities should be sorted
         /// </param>
-        /// <param name="includer">
-        ///     The <see cref="IEntityIncluder{TEntity}" /> that defines which navigational properties should be eagerly loaded.
+        /// <param name="loader">
+        ///     The <see cref="IEntityLoader{TEntity}" /> that defines which navigational properties should be eagerly loaded.
         /// </param>
         /// 
         /// <returns>
@@ -141,7 +141,7 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         TEntity FirstOrDefault(
             IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ),
             IEntitySorter<TEntity> sorter = default( IEntitySorter<TEntity> ),
-            IEntityIncluder<TEntity> includer = default( IEntityIncluder<TEntity> ));
+            IEntityLoader<TEntity> loader = default( IEntityLoader<TEntity> ));
 
         /// <summary>
         ///     Returns the first entity from that satisfies the filter
@@ -153,8 +153,8 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <param name="sorter">
         ///     The <see cref="IEntitySorter{TEntity}" /> that defines how the entities should be sorted
         /// </param>
-        /// <param name="includer">
-        ///     The <see cref="IEntityIncluder{TEntity}" /> that defines which navigational properties should be eagerly loaded.
+        /// <param name="loader">
+        ///     The <see cref="IEntityLoader{TEntity}" /> that defines which navigational properties should be eagerly loaded.
         /// </param>
         /// 
         /// <exception cref="InvalidOperationException">
@@ -167,11 +167,11 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         TEntity First(
             IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ),
             IEntitySorter<TEntity> sorter = default( IEntitySorter<TEntity> ),
-            IEntityIncluder<TEntity> includer = default( IEntityIncluder<TEntity> ));
+            IEntityLoader<TEntity> loader = default( IEntityLoader<TEntity> ));
 
         /// <summary>
         ///     Returns the entities ordered with the <paramref name="sorter" />,
-        ///     filtered by the <paramref name="filter" /> and with navigational properties eagerly loaded as defined by the <paramref name="includer" />.
+        ///     filtered by the <paramref name="filter" /> and with navigational properties eagerly loaded as defined by the <paramref name="loader" />.
         ///     Finally, these entities are processed by the <paramref name="selector"/>
         /// </summary>
         /// <param name="selector">
@@ -183,8 +183,8 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// <param name="sorter">
         ///     The <see cref="IEntitySorter{TEntity}" /> that defines how the entities should be sorted
         /// </param>
-        /// <param name="includer">
-        ///     The <see cref="IEntityIncluder{TEntity}" /> that defines which navigational properties should be eagerly loaded.
+        /// <param name="loader">
+        ///     The <see cref="IEntityLoader{TEntity}" /> that defines which navigational properties should be eagerly loaded.
         /// </param>
         /// 
         /// <typeparam name="TResult">
@@ -193,14 +193,14 @@ namespace TestingGround.Core.Domain.Internal.Repositories
         /// 
         /// <returns>
         ///     The entities ordered with the <paramref name="sorter" />,
-        ///     filtered by the <paramref name="filter" /> and with navigational properties eagerly loaded as defined by the <paramref name="includer" />.
+        ///     filtered by the <paramref name="filter" /> and with navigational properties eagerly loaded as defined by the <paramref name="loader" />.
         ///     Finally, these entities are processed by the <paramref name="selector"/>
         /// </returns>
         IEnumerable<TResult> Select<TResult>(
             Func<TEntity, TResult> selector,
             IEntityFilter<TEntity> filter = default( IEntityFilter<TEntity> ),
             IEntitySorter<TEntity> sorter = default( IEntitySorter<TEntity> ),
-            IEntityIncluder<TEntity> includer = default( IEntityIncluder<TEntity> ));
+            IEntityLoader<TEntity> loader = default( IEntityLoader<TEntity> ));
 
         /// <summary>
         ///     Returns the entity for the given keyValues.

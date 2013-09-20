@@ -18,9 +18,10 @@ namespace TestingGround.Default.Database
     [UsedImplicitly]
     public class TestingContext : DbContext
     {
-        private static readonly IDictionary<Type, IEnumerable<PropertyInfo>> CollectionPropertiesPerType = new Dictionary<Type, IEnumerable<PropertyInfo>>(); 
+        private static readonly IDictionary<Type, IEnumerable<PropertyInfo>> CollectionPropertiesPerType = new Dictionary<Type, IEnumerable<PropertyInfo>>();
 
-        public TestingContext() : this("Name=DbContext")
+        public TestingContext()
+            : this("Name=TestingConnection")
         {
 
         }

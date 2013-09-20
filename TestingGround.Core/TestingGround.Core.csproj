@@ -40,6 +40,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,23 +56,27 @@
     <Compile Include="Domain\Internal\Bases\Entity.cs" />
     <Compile Include="Domain\Internal\Contracts\IDeletable.cs" />
     <Compile Include="Domain\Internal\Contracts\IEntityFilter.cs" />
-    <Compile Include="Domain\Internal\Contracts\IEntityIncluder.cs" />
+    <Compile Include="Domain\Internal\Contracts\IEntityLoader.cs" />
     <Compile Include="Domain\Internal\Contracts\IEntitySorter.cs" />
     <Compile Include="Domain\Internal\Contracts\IIdentifiable.cs" />
     <Compile Include="Domain\Internal\Repositories\IRepository.cs" />
     <Compile Include="Domain\Security\Models\UserProfile.cs" />
     <Compile Include="Domain\Security\Repositories\IUserProfileRepository.cs" />
     <Compile Include="Infrastructure\Attributes\ApiAttributes.cs" />
+    <Compile Include="Infrastructure\Interceptors\CollectionPropertyVisitor.cs" />
     <Compile Include="Infrastructure\PropertyIntercepting\FilteredCollection.cs" />
     <Compile Include="Infrastructure\Utilities\Authentication\PasswordHasher.cs" />
     <Compile Include="Infrastructure\Utilities\Filtering\EmptyEntityFilter.cs" />
     <Compile Include="Infrastructure\Utilities\Filtering\EntityFilter.cs" />
     <Compile Include="Infrastructure\Utilities\Filtering\ExtensionsForIEntityFilter.cs" />
     <Compile Include="Infrastructure\Utilities\Filtering\WhereEntityFilter.cs" />
-    <Compile Include="Infrastructure\Utilities\Including\EmptyEntityIncluder.cs" />
-    <Compile Include="Infrastructure\Utilities\Including\EntityIncluder.cs" />
-    <Compile Include="Infrastructure\Utilities\Including\ExtensionsForIEntityIncluder.cs" />
-    <Compile Include="Infrastructure\Utilities\Including\PropertyEntityIncluder.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\CollectionEntityLoader.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\EmptyEntityLoader.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\EntityLoader.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\EntityLoadModel.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\EnumerableEntityLoader.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\ExtensionsForIEntityIncluder.cs" />
+    <Compile Include="Infrastructure\Utilities\Loading\PropertyEntityLoader.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\EmptyEntitySorter.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\EntitySorter.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\EntitySorterBuilder.cs" />
@@ -79,6 +84,8 @@
     <Compile Include="Infrastructure\Utilities\Sorting\OrderByEntitySorter.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\SortDirection.cs" />
     <Compile Include="Infrastructure\Utilities\Sorting\ThenByEntitySorter.cs" />
+    <Compile Include="Infrastructure\Interceptors\IQueryableEntitiesVisitor.cs" />
+    <Compile Include="Infrastructure\Interceptors\ParameterRebinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

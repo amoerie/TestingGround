@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{67EE953B-B54C-49FA-82E2-74574209EDFA}</ProjectGuid>
+    <ProjectGuid>{F3A4D1BF-6B91-4B09-A8D3-341423886944}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TestingGround.Default</RootNamespace>
-    <AssemblyName>TestingGround.Default</AssemblyName>
+    <RootNamespace>TestingGround.Tests</RootNamespace>
+    <AssemblyName>TestingGround.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,19 +30,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.1.1\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="LinqKit">
-      <HintPath>..\packages\LinqKit.1.0\lib\35\LinqKit.dll</HintPath>
-    </Reference>
-    <Reference Include="QueryInterceptor">
-      <HintPath>..\packages\QueryInterceptor.0.2\lib\net40\QueryInterceptor.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,24 +52,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\TestingContext.cs" />
-    <Compile Include="Persistence\Fitness\Repositories\GymMemberRepository.cs" />
-    <Compile Include="Persistence\Internal\Repositories\Repository.cs" />
-    <Compile Include="Persistence\Security\Repositories\UserProfileRepository.cs" />
+    <Compile Include="TestsForEagerEnumerableLoading.cs" />
+    <Compile Include="Data\Initializer.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TestingGround.Core\TestingGround.Core.csproj">
-      <Project>{5b25a12e-9f1e-462e-8b86-d3e13789e901}</Project>
-      <Name>TestingGround.Core</Name>
-    </ProjectReference>
+    <Compile Include="TestBase.cs" />
+    <Compile Include="TestsForEagerCollectionLoading.cs" />
+    <Compile Include="TestsForLazyCollectionLoading.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TestingGround.Core\TestingGround.Core.csproj">
+      <Project>{5B25A12E-9F1E-462E-8B86-D3E13789E901}</Project>
+      <Name>TestingGround.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestingGround.Default\TestingGround.Default.csproj">
+      <Project>{67EE953B-B54C-49FA-82E2-74574209EDFA}</Project>
+      <Name>TestingGround.Default</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

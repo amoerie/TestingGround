@@ -12,5 +12,16 @@ namespace TestingGround.Core.Domain.Fitness.Models
 
         public virtual int Repetitions { get; set; }
         public virtual double Calories { get; set; }
+
+        public WorkoutExercise()
+        {
+        }
+
+        public WorkoutExercise(Exercise exercise, double calories, int repetitions)
+        {
+            Exercise = exercise;
+            Repetitions = repetitions;
+            Calories = calories;
+        }
     }
 }

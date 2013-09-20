@@ -6,14 +6,9 @@ namespace TestingGround.Core.Domain.Fitness.Models
 {
     public class Workout: Entity
     {
-        private ICollection<WorkoutExercise> _workoutExercises;
-
         public DateTime Date { get; set; }
-
-        public ICollection<WorkoutExercise> WorkoutExercises
-        {
-            get { return _workoutExercises ?? (_workoutExercises = new List<WorkoutExercise>()); }
-            set { _workoutExercises = value; }
-        }
+        public virtual GymMember GymMember { get; set; }
+        public virtual int GymMemberId { get; set; }
+        public ICollection<WorkoutExercise> WorkoutExercises { get; set; }
     }
 }

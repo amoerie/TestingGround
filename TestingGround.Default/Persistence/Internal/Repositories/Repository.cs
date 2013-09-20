@@ -9,7 +9,8 @@ using LinqKit;
 using QueryInterceptor;
 using TestingGround.Core.Domain.Internal.Contracts;
 using TestingGround.Core.Domain.Internal.Repositories;
-using TestingGround.Default.Interceptors;
+using TestingGround.Core.Infrastructure.Interceptors;
+using TestingGround.Core.Infrastructure.Utilities.Filtering;
 
 namespace TestingGround.Default.Persistence.Internal.Repositories
 {
@@ -36,23 +37,6 @@ namespace TestingGround.Default.Persistence.Internal.Repositories
         }
 
         /// <summary>
-        ///     Gets the entities
-        /// </summary>
-        protected virtual IQueryable<TEntity> Entities(IEntityFilter<TEntity> filter = null, IEntitySorter<TEntity> sorter = null, IEntityIncluder<TEntity> includer = null)
-        {
-            var entities = _entities;
-            if (includer != null)
-                entities = includer.ExecuteInclusions(entities);
-            entities = entities/*.AsExpandable()*/.Where(e => !e.Deleted);
-            if (filter != null)
-                entities = filter.Filter(entities);
-            if (sorter != null)
-                entities = sorter.Sort(entities);
-            entities = entities.InterceptWith(new DeletedFilterInterceptor());
-            return entities;
-        }
-
-        /// <summary>
         ///     Gets the editable dbset
         /// </summary>
         protected virtual DbSet<TEntity> EntitySet
@@ -60,11 +44,16 @@ namespace TestingGround.Default.Persistence.Internal.Repositories
             get { return _entitySet; }
         }
 
-        public IQueryable<TEntity> List(IEntityFilter<TEntity> filter = null,
+        protected virtual IQueryable<TEntity> Entities
+        {
+            get { return EntitySet.AsExpandable().Where(e => !e.Deleted); }
+        } 
+        
+        public IList<TEntity> List(IEntityFilter<TEntity> filter = null,
             IEntitySorter<TEntity> sorter = null,
             int? page = null,
             int? pageSize = null,
-            IEntityIncluder<TEntity> includer = null)
+            IEntityLoader<TEntity> loader = null)
         {
             if ((page.HasValue || pageSize.HasValue) && sorter == null)
             {
@@ -76,53 +65,69 @@ namespace TestingGround.Default.Persistence.Internal.Repositories
                 throw new ArgumentException("You have to define a pageSize if you specify a page!");
             }
 
-            var entities = Entities(filter, sorter, includer);
-
+            var entities = Entities;
+            if (filter != null)
+                entities = filter.Filter(entities);
+            if (sorter != null)
+                entities = sorter.Sort(entities);
             if (page != null)
                 entities = entities.Skip(pageSize.Value * page.Value);
-
             if (pageSize != null)
                 entities = entities.Take(pageSize.Value);
-
-            return entities;
+            entities = entities.InterceptWith(new QueryableEntitiesVisitor());
+            if (loader != null)
+                return loader.Load(entities);
+            return entities.ToList();
         }
 
         public virtual int Count(IEntityFilter<TEntity> filter = null)
         {
-            return Entities(filter).Count();
+            return ( filter ?? EntityFilter<TEntity>.AsQueryable() ).Filter(Entities).Count();
         }
 
         public bool Any(IEntityFilter<TEntity> filter = null)
         {
-            return Entities(filter).Any();
+            return (filter ?? EntityFilter<TEntity>.AsQueryable()).Filter(Entities).Any();
         }
 
-        public TEntity SingleOrDefault(IEntityFilter<TEntity> filter = null, IEntityIncluder<TEntity> includer = null)
+        public TEntity SingleOrDefault(IEntityFilter<TEntity> filter = null, IEntityLoader<TEntity> loader = null)
         {
-            return Entities(filter, includer: includer).SingleOrDefault();
+            var entities = ( filter ?? EntityFilter<TEntity>.AsQueryable() ).Filter(Entities);
+            if (loader != null)
+                return loader.SingleOrDefault(entities);
+            return entities.SingleOrDefault();
         }
 
-        public TEntity Single(IEntityFilter<TEntity> filter = null, IEntityIncluder<TEntity> includer = null)
+        public TEntity Single(IEntityFilter<TEntity> filter = null, IEntityLoader<TEntity> loader = null)
         {
-            return Entities(filter, includer: includer).Single();
+            var entities = (filter ?? EntityFilter<TEntity>.AsQueryable()).Filter(Entities);
+            if (loader != null)
+                return loader.Single(entities);
+            return entities.Single();
         }
 
-        public TEntity FirstOrDefault(IEntityFilter<TEntity> filter = null, IEntitySorter<TEntity> sorter = null, IEntityIncluder<TEntity> includer = null)
+        public TEntity FirstOrDefault(IEntityFilter<TEntity> filter = null, IEntitySorter<TEntity> sorter = null, IEntityLoader<TEntity> loader = null)
         {
-            return Entities(filter, sorter, includer).FirstOrDefault();
+            var entities = (filter ?? EntityFilter<TEntity>.AsQueryable()).Filter(Entities);
+            if (loader != null)
+                return loader.FirstOrDefault(entities);
+            return entities.FirstOrDefault();
         }
 
-        public TEntity First(IEntityFilter<TEntity> filter = null, IEntitySorter<TEntity> sorter = null, IEntityIncluder<TEntity> includer = null)
+        public TEntity First(IEntityFilter<TEntity> filter = null, IEntitySorter<TEntity> sorter = null, IEntityLoader<TEntity> loader = null)
         {
-            return Entities(filter, sorter, includer).First();
+            var entities = (filter ?? EntityFilter<TEntity>.AsQueryable()).Filter(Entities);
+            if (loader != null)
+                return loader.First(entities);
+            return entities.First();
         }
 
         public IEnumerable<TResult> Select<TResult>(Func<TEntity, TResult> selector,
             IEntityFilter<TEntity> filter = null,
             IEntitySorter<TEntity> sorter = null,
-            IEntityIncluder<TEntity> includer = null)
+            IEntityLoader<TEntity> loader = null)
         {
-            return Entities(filter, sorter, includer).Select(selector);
+            return List(filter, sorter, null, null, loader).Select(selector);
         }
 
         public virtual TEntity Find(int id)
@@ -192,7 +197,7 @@ namespace TestingGround.Default.Persistence.Internal.Repositories
         public TResult Query<TResult>(Expression<Func<IQueryable<TEntity>, TResult>> query)
         {
             //var filteredDeleted = (Expression<Func<IQueryable<TEntity>, TResult>>) new DeletedFilterInterceptor().Visit(query);
-            return query.Compile()(Entities());
+            return query.Compile()(Entities);
         }
 
         protected virtual void Add(TEntity entity)

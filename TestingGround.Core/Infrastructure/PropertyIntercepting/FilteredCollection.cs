@@ -12,7 +12,6 @@ namespace TestingGround.Core.Infrastructure.PropertyIntercepting
     public class FilteredCollection <TEntity> : ICollection<TEntity> where TEntity : Entity
     {
         private readonly DbCollectionEntry _dbCollectionEntry;
-        private readonly Func<TEntity, Boolean> _compiledFilter;
         private readonly Expression<Func<TEntity, Boolean>> _filter;
         private ICollection<TEntity> _collection;
 
@@ -20,8 +19,7 @@ namespace TestingGround.Core.Infrastructure.PropertyIntercepting
         {
             _filter = entity => !entity.Deleted;
             _dbCollectionEntry = dbCollectionEntry;
-            _compiledFilter = _filter.Compile();
-            _collection = collection != null ? collection.Where(_compiledFilter).ToList() : null;
+            _collection = collection;
         }
         
         private ICollection<TEntity> Entities
@@ -54,8 +52,7 @@ namespace TestingGround.Core.Infrastructure.PropertyIntercepting
 
         void ICollection<TEntity>.Add(TEntity item)
         {
-            if(_compiledFilter(item))
-                Entities.Add(item);
+            Entities.Add(item);
         }
 
         void ICollection<TEntity>.Clear()
@@ -77,9 +74,9 @@ namespace TestingGround.Core.Infrastructure.PropertyIntercepting
         {
             get
             {
-                if (_dbCollectionEntry.IsLoaded)
-                    return _collection.Count;
-                return _dbCollectionEntry.Query().Cast<TEntity>().Count(_filter);
+                return
+                    /*_dbCollectionEntry.IsLoaded ? Entities.Count : _dbCollectionEntry.Query().Cast<TEntity>().Count(_filter);*/
+                    Entities.Count;
             }
         }
 
